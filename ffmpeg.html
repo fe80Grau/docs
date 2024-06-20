@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Básico de FFmpeg</title>
+    <!-- Importando Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <!-- Importando Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Estilos personalizados -->
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        .collection-item {
+            background-color: #fff;
+        }
+        /* Dark mode styles */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #121212;
+                color: #e0e0e0;
+            }
+            .collection .collection-item {
+                background-color: #333333;
+                color: #e0e0e0;
+            }
+            .card, .pre, code {
+                background-color: #2e2e2e;
+                color: #ffffff;
+            }
+            a {
+                color: #82b1ff;
+            }
+            .collection-item a {
+                color: #82b1ff;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="center-align">Manual Básico de FFmpeg para Montajes sin Cambiar Codecs ni Perder Calidad</h1>
+        <p>FFmpeg es una poderosa herramienta de línea de comandos para manejar multimedia, incluyendo video, audio y otros tipos de archivos.</p>
+
+        <h2>Requisitos Previos:</h2>
+        <ul class="collection">
+            <li class="collection-item">Instalar <strong>ffmpeg</strong>. Si no lo tienes instalado, puedes hacerlo según tu sistema operativo:</li>
+        </ul>
+
+        <h3>En Windows:</h3>
+        <ol class="collection">
+            <li class="collection-item">Descarga el paquete ejecutable de la <a href="https://ffmpeg.org/download.html">página oficial de FFmpeg</a>.</li>
+            <li class="collection-item">Extrae el contenido del archivo zip.</li>
+            <li class="collection-item">Añade la ruta del directorio <code>bin</code> de FFmpeg a las variables de entorno de tu sistema.</li>
+        </ol>
+
+        <h3>En macOS:</h3>
+        <pre class="card"><code>brew install ffmpeg</code></pre>
+
+        <h3>En Linux:</h3>
+        <pre class="card"><code>sudo apt update
+sudo apt install ffmpeg</code></pre>
+
+        <h2>Montajes Básicos con <strong>ffmpeg</strong> sin Cambiar Codecs:</h2>
+        <p>Para asegurarte de que no estás cambiando los codecs ni la calidad del archivo, puedes usar la opción <code>-c copy</code>, que copia los flujos de audio y video tal cual.</p>
+
+        <h3>1. Concatenar Videos</h3>
+        <p>Si tienes varios archivos de video que quieres unir, puedes hacerlo de esta manera:</p>
+        <p>Primero, crea un archivo de texto <code>input.txt</code> con las rutas de los videos que deseas concatenar:</p>
+        <pre class="card"><code>file 'video1.mp4'
+file 'video2.mp4'
+file 'video3.mp4'</code></pre>
+        <p>Luego, ejecuta el siguiente comando:</p>
+        <pre class="card"><code>ffmpeg -f concat -safe 0 -i input.txt -c copy output.mp4</code></pre>
+
+        <h3>2. Extraer y Volver a Combinar Audio y Video</h3>
+        <p>Si necesitas extraer el audio y luego volver a agregarlo al video sin pérdida de calidad, puedes hacer lo siguiente:</p>
+        <p><strong>Extraer el audio:</strong></p>
+        <pre class="card"><code>ffmpeg -i video.mp4 -vn -c copy audio.aac</code></pre>
+        <p><strong>Extraer el video (sin audio):</strong></p>
+        <pre class="card"><code>ffmpeg -i video.mp4 -an -c copy video_only.mp4</code></pre>
+        <p><strong>Combinar audio y video:</strong></p>
+        <pre class="card"><code>ffmpeg -i video_only.mp4 -i audio.aac -c copy output.mp4</code></pre>
+
+        <h3>3. Cortar un Segmento de Video</h3>
+        <p>Para cortar una sección específica de un video, usa los parámetros <code>-ss</code> (para el tiempo de inicio) y <code>-t</code> (duración):</p>
+        <pre class="card"><code>ffmpeg -ss 00:01:30 -i input.mp4 -t 00:00:30 -c copy output.mp4</code></pre>
+        <p>Esto cortará 30 segundos de video empezando desde el minuto 1:30 del <code>input.mp4</code>.</p>
+
+        <h3>4. Agregar Subtítulos</h3>
+        <p>Si tienes un archivo de subtítulos (por ejemplo, <code>subtitles.srt</code>), puedes agregarlos al video así:</p>
+        <pre class="card"><code>ffmpeg -i input.mp4 -i subtitles.srt -c copy -c:s mov_text output.mp4</code></pre>
+        <p>Ten en cuenta que algunos contenedores, como el <code>mp4</code>, requieren un codec de subtítulos específico (<code>mov_text</code>).</p>
+
+        <h2>Notas Finales</h2>
+        <ul class="collection">
+            <li class="collection-item"><strong>Velocidad:</strong> La opción <code>-c copy</code> hace el proceso mucho más rápido ya que no recodifica el contenido.</li>
+            <li class="collection-item"><strong>Compatibilidad:</strong> Asegúrate de que todos los archivos de entrada tienen el mismo formato y códecs, de lo contrario, <code>ffmpeg</code> puede fallar al concatenar o combinar.</li>
+        </ul>
+        <p>Estos son solo algunos ejemplos básicos para comenzar a hacer montajes con <strong>ffmpeg</strong> sin cambiar codecs ni perder calidad. Para casos más avanzados o específicos, puedes consultar la <a href="https://ffmpeg.org/documentation.html">documentación oficial de FFmpeg</a>.</p>
+    </div>
+    <!-- Importando Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
